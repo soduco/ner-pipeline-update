@@ -1,0 +1,5 @@
+venv/
+ner/model-best/
+ner/model-last/
+.idea
+__pycache__
