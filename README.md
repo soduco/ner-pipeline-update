@@ -43,12 +43,14 @@ Les données d'entraînement se divisent en deux corpus, de tailles à peu près
 `python -m spacy convert ./training-data/Didot_Dev.json ./training-data --converter json --file-type spacy -n 10 --model fr_core_news_lg --lang fr`
 
 2- Créer un fichier de configuration de base de modèle avec l'utilitaire fourni ici: https://spacy.io/usage/training#quickstart. NB: On veut seulement un pipeline qui fait de l'extraction d'entités nommées, donc on peut ne sélectionner que les composants NER et Tok2Vec.
- Coller ce fichier dans le dossier "ner". 
+ Coller ce fichier dans le dossier "ner".
 
 3- Ajouter les chemins des fichiers d'entraînement *.spacy dans ce fichier de config. Pour dire que l'on veut "mettre à jour" les composants de ner et tok2vec, ajouter;
 
-`[components.ner]
-source = "fr_core_news_lg"`
+```
+[components.ner]
+source = "fr_core_news_lg"
+```
 
 4- Pour ajouter un label au composant de ner, laisser le système le détecter tout seul dans les données d'entraînement.
 
@@ -61,13 +63,14 @@ source = "fr_core_news_lg"`
 6- Lancer l'entraînement du modèle avec la commande:
 `python -m spacy train ./config.cfg --output ./`
 
-7- En option: Le fichier postprocessing.py contient des règles permettant d'étendre vers la gauche ou la droite l'étendue des entités nommées détectées par le modèle lorsqu'il est assez évident que celle-ci ne couvre pas l'ensemble des tokens qui devraient en faire partie. Pour ajouter ces règles comme un composant du pipeline de nlp, à appliquer après l'étape de 'ner', il faut:
-	
-		- Dans le fichier config.cfg du model-best ajouter :
-		- Dans la partie [nlp]: `pipeline = ["tok2vec","ner","expand_entities"]`
-		- Plus bas, une partie : 
-		`[components.expand_entities]
-		factory = "expand_entities"`
+7- En option: Le fichier postprocessing.py contient des règles permettant d'étendre vers la gauche ou la droite l'étendue des entités nommées détectées par le modèle lorsqu'il est assez évident que celle-ci ne couvre pas l'ensemble des tokens qui devraient en faire partie. Pour ajouter ces règles comme un composant du pipeline de nlp, à appliquer après l'étape de 'ner', il faut:	
+- Dans le fichier config.cfg du model-best ajouter :
+- Dans la partie [nlp]: `pipeline = ["tok2vec","ner","expand_entities"]`
+- Plus bas, une partie : 
+```
+[components.expand_entities]
+factory = "expand_entities"
+```
 
 8- Pour tester le nouveau pipeline, exécuter le script test-directories-extraction. Les résultats sont visualisables via un navigateur à l'adresse: http://localhost:5000 
 

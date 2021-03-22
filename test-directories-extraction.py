@@ -6,13 +6,13 @@ from spacy.tokens import Doc
 from ner import postprocessing
 
 #Load test data
-file_name = 'Didot_1851a_sample.csv'
+file_name = 'test-data/Didot_1851a_sample.csv'
 tab = pd.read_csv(Path(file_name), encoding='utf8')
 raw = tab['raw']
 raw = raw.apply(lambda txt: '%s\n' % txt)
 
 #Load updated pipeline
-nlp = spacy.load('../ner/model-best')
+nlp = spacy.load('ner/model-best')
 
 #Extract named entities in text
 docs = nlp.pipe(list(raw))
