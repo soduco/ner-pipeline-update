@@ -1,8 +1,9 @@
 name: 'Package and release model'
-  description: 'Create a new release with the Spacy model exposed as a Python package.'
+
 on:
   release:
     types: [published]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,7 +35,8 @@ jobs:
           --code ./postprocessing.py \
           --name ner_directories \
           --version ${{ github.event.release.tag_name }}
-    - uses: ncipollo/release-action@v1
-      with:
-        ref: main
-        artifacts: "model-best/fr-ner-directories-${{ github.event.release.tag_name }}/fr-ner-directories-${{ github.event.release.tag_name }}.tar.gz"
+      - name: Publishing
+        uses: ncipollo/release-action@v1
+        with:
+          ref: main
+          artifacts: "model-best/fr-ner-directories-${{ github.event.release.tag_name }}/fr-ner-directories-${{ github.event.release.tag_name }}.tar.gz"
