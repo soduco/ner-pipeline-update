@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]    
+        python-version: [3.8, 3.9]    
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -21,13 +21,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python -m spacy download fr_core_news_lg
-      - name: Training
-        run: |
-          pushd ner
-          python -m spacy init fill-config base_config.cfg config.cfg
-          python -m spacy train ./config.cfg --output ../
-          popd
       - name: Packaging
         run: |
           python -m spacy package \
