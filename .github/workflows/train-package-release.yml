@@ -1,0 +1,41 @@
+name: 'Package and release model'
+
+on:
+  release:
+    types: [published,edited]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          lfs: true
+      - name: checkoutLFS
+        uses: actions/checkout@v2
+      - run: git lfs pull
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Packaging
+        run: |
+          python -m spacy package \
+          ./model-best \
+          ./ \
+          --code ner/postprocessing.py \
+          --name ner_directories \
+          --version latest
+      - name: Adding as asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "fr_ner_directories-latest/dist/fr_ner_directories-latest.tar.gz"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
